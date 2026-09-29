@@ -29,3 +29,5 @@ Private package pins public runtime commit/digest, verifies before safe extracti
 
 - Start: both repositories clean; public base 0f7767f, private base 025430d. Earlier Mac diagnostic proves potential parity only; unchanged Hub 1.33/1.32 startup fails offline with old cache.
 - Ruling: work in existing single Git trees as explicitly approved, overriding the execution skill worktree default. Public publishing and private package push are explicitly within the accepted plan.
+- Implementation: fresh immutable-revision retrieval produced five SHA-256 records. The source tokenizer is already normalized: source/final hashes coincide. Unknown variants remain rejected. Linux lock regenerated with uv 0.9.7 and preserved compatible constraints. 55 local tests pass; these are contract/fixture tests, not Linux model evidence.
+- Runtime implementation: protected version directory, copied-byte verification before normalization, complete final-tree/owner/mode/link/hash checks, local Agent attachment, CPU package checks. First security tests failed for missing implementation and passed after implementation. Linux acceptance and release are still pending.

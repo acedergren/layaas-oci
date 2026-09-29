@@ -4,8 +4,23 @@
   "model_repo": "convaiinnovations/laya",
   "model_revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
   "checkpoint": "multilingual",
-  "torch_version": "2.8.0",
-  "limits": {"body_bytes": 32768, "state_chars": 8000, "questions": 8,
-    "choice_options": 16, "score_levels": 10, "total_options": 64,
-    "max_tokens": 512, "head_tokens": 128, "admitted_requests": 2}
+  "torch_version": "2.13.0",
+  "limits": {
+    "body_bytes": 32768,
+    "state_chars": 8000,
+    "questions": 8,
+    "choice_options": 16,
+    "score_levels": 10,
+    "total_options": 64,
+    "max_tokens": 512,
+    "head_tokens": 128,
+    "admitted_requests": 2
+  },
+  "version": "0.1.1",
+  "packages": {
+    "torch": "2.13.0+cpu",
+    "transformers": "5.10.4",
+    "huggingface-hub": "1.33.0"
+  },
+  "model_manifest_sha256": "b3aeb83833e44e1a20b91df8d86d2eb040d0ac12e2c32e57f0fa97a9e38782b7"
 }

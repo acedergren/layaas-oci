@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_stack_cloud_init_is_valid_and_embeds_only_pinned_files_and_secret_reference():
     sources = {
+        "model_bundle": "model_bundle.py",
+        "model_manifest": "model-manifest.json",
         "server": "server.py",
         "release_py": "release.py",
         "release_json": "release.json",
@@ -35,6 +37,8 @@ def test_stack_cloud_init_is_valid_and_embeds_only_pinned_files_and_secret_refer
     assert config["runcmd"] == [["bash", "/opt/laya/bootstrap.sh"]]
     for key, relative in sources.items():
         entry = written[next(path for path, name in {
+            "/opt/laya/model_bundle.py": "model_bundle.py",
+            "/opt/laya/model-manifest.json": "model-manifest.json",
             "/opt/laya/server.py": "server.py",
             "/opt/laya/release.py": "release.py",
             "/opt/laya/release.json": "release.json",

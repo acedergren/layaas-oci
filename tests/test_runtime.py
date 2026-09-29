@@ -54,20 +54,11 @@ def test_credential_file_and_missing_file(monkeypatch, tmp_path):
 
 
 def test_missing_cache_fails_before_serving(monkeypatch):
-    import laya
+    import model_bundle
     monkeypatch.delenv("CREDENTIALS_DIRECTORY", raising=False)
     monkeypatch.setenv("LAYA_API_KEY", KEY)
-
-    class MissingCache:
-        def __init__(self, **kwargs):
-            assert kwargs["device"] == "cpu"
-            assert kwargs["revision"] == RELEASE["model_revision"]
-
-        def preload(self, names):
-            raise OSError("fixture: missing offline checkpoint")
-
-    monkeypatch.setattr(laya, "Router", MissingCache)
-    with pytest.raises(OSError):
+    monkeypatch.setattr(model_bundle, "MODEL_ROOT", Path('/nonexistent-layaas-model-test'))
+    with pytest.raises((OSError, ValueError)):
         create_app()
 
 

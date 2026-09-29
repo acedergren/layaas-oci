@@ -16,7 +16,7 @@ systemctl daemon-reload
 systemctl reset-failed layaas-secrets.service layaas-api.service || true
 systemctl enable layaas-secrets.service layaas-api.service
 systemctl start layaas-secrets.service
-runuser -u laya -- env HF_HOME=/var/lib/laya/huggingface /opt/laya/venv/bin/python /opt/laya/preload.py
+HF_HOME=/var/lib/laya/installer-cache HF_HUB_DISABLE_IMPLICIT_TOKEN=1 /opt/laya/venv/bin/python /opt/laya/preload.py
 touch /opt/laya/.ready
 systemctl start layaas-api.service
 echo 'Layaas bootstrap completed'

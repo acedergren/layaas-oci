@@ -11,7 +11,9 @@ User=laya
 Group=laya
 WorkingDirectory=/opt/laya
 LoadCredential=api-key:/run/laya-secrets/api-key
-Environment=HF_HOME=/var/lib/laya/huggingface
+Environment=HF_HOME=/tmp/laya-hf
+Environment=HF_HUB_DISABLE_IMPLICIT_TOKEN=1
+Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=HF_HUB_OFFLINE=1
 Environment=LAYA_BIND_HOST=0.0.0.0
 Environment=LAYA_PORT=8000
@@ -24,7 +26,6 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/var/lib/laya
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 MemoryMax=6G
 CPUQuota=200%

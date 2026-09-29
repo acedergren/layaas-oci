@@ -28,6 +28,8 @@ locals {
   user_data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
     api_secret_ocid = var.api_secret_ocid
     bootstrap       = base64gzip(file("${path.module}/deploy/bootstrap.sh"))
+    model_bundle    = base64gzip(file("${path.module}/model_bundle.py"))
+    model_manifest  = base64gzip(file("${path.module}/model-manifest.json"))
     server          = base64gzip(file("${path.module}/server.py"))
     release_py      = base64gzip(file("${path.module}/release.py"))
     release_json    = base64gzip(file("${path.module}/release.json"))

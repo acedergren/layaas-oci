@@ -97,13 +97,8 @@ def create_app(router=None):
     serve.MAX_SCORE_LEVELS = LIMITS["score_levels"]
     serve.MAX_TOTAL_OPTIONS = LIMITS["total_options"]
     if router is None:
-        import torch
-        from laya import Router
-        torch.set_num_threads(1)
-        torch.use_deterministic_algorithms(True)
-        router = Router(device="cpu", revision=MODEL_REVISION, max_loaded=1,
-                        auto_task_detection=False)
-        router.preload([CHECKPOINT])
+        from model_bundle import load_router
+        router = load_router()
     app = serve.create_app(router=FixedRouter(router))
     app.add_middleware(ProtectAllRoutes, key=key)
     return app

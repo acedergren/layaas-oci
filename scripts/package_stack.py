@@ -8,6 +8,7 @@ STACK_FILES = (
     "main.tf", "variables.tf", "outputs.tf", "schema.yaml", ".terraform.lock.hcl",
     "cloud-init.yaml.tftpl", "LICENSE", "NOTICE",
     "server.py", "release.py", "release.json", "requirements-linux.lock",
+    "model_bundle.py", "model-manifest.json",
     "deploy/bootstrap.sh", "deploy/preload.py", "deploy/fetch_secret.py",
     "deploy/layaas-api.service", "deploy/layaas-secrets.service",
 )

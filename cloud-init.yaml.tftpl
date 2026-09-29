@@ -2,6 +2,16 @@
 bootcmd:
   - mkdir -p /opt/laya /etc/laya /etc/systemd/system
 write_files:
+  - path: /opt/laya/model_bundle.py
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${model_bundle}
+  - path: /opt/laya/model-manifest.json
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${model_manifest}
   - path: /opt/laya/server.py
     owner: root:root
     permissions: '0644'
