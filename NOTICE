@@ -1,0 +1,15 @@
+Layaas is an independent project and is not affiliated with Oracle or Convai
+Innovations.
+
+The Laya serving source is installed from NandhaKishorM/laya at immutable commit
+9d955671415fc19f069b9cc998928075c1f255ec. That source is distributed under the
+Apache License, Version 2.0; see the upstream LICENSE file.
+
+The multilingual model weights are downloaded from convaiinnovations/laya,
+revision 55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851, subfolder multilingual. The
+upstream model card declares Apache-2.0. The weights are not copied into this
+repository. See https://huggingface.co/convaiinnovations/laya for source terms.
+
+The OCI logo button, if present in a release page, is provided by Oracle's
+Resource Manager documentation. Layaas does not use Oracle logos or imply Oracle
+endorsement.

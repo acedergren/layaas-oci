@@ -1,0 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+laya[serve] @ https://github.com/NandhaKishorM/laya/archive/9d955671415fc19f069b9cc998928075c1f255ec.tar.gz
+torch==2.8.0+cpu
+transformers==4.57.6
+fastapi==0.141.1
+uvicorn==0.54.0
+oci==2.160.0

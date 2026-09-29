@@ -1,0 +1,55 @@
+#cloud-config
+bootcmd:
+  - mkdir -p /opt/laya /etc/laya /etc/systemd/system
+write_files:
+  - path: /opt/laya/server.py
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${server}
+  - path: /opt/laya/release.py
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${release_py}
+  - path: /opt/laya/release.json
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${release_json}
+  - path: /opt/laya/requirements-linux.lock
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${requirements}
+  - path: /opt/laya/preload.py
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${preload}
+  - path: /opt/laya/fetch_secret.py
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${fetch_secret}
+  - path: /opt/laya/bootstrap.sh
+    owner: root:root
+    permissions: '0700'
+    encoding: gz+b64
+    content: ${bootstrap}
+  - path: /etc/laya/api-secret.json
+    owner: root:root
+    permissions: '0600'
+    content: '{"secret_ocid":"${api_secret_ocid}"}'
+  - path: /etc/systemd/system/layaas-api.service
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${api_service}
+  - path: /etc/systemd/system/layaas-secrets.service
+    owner: root:root
+    permissions: '0644'
+    encoding: gz+b64
+    content: ${secrets_service}
+runcmd:
+  - [bash, /opt/laya/bootstrap.sh]

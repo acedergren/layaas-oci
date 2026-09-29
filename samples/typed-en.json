@@ -1,0 +1,9 @@
+{
+  "model": "multilingual",
+  "state": "I was charged twice for the same purchase. Please refund the duplicate charge.",
+  "questions": {
+    "team": {"type": "choice", "instructions": "Which team should handle this request?", "criteria": {"billing": "Payments and refunds", "technical": "Software faults"}},
+    "urgency": {"type": "score", "instructions": "How urgent is this request?", "criteria": ["low", "medium", "high"]},
+    "refund_requested": {"type": "noul", "instructions": "Does the customer explicitly request a refund?"}
+  }
+}

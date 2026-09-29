@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability privately
+    url: https://github.com/acedergren/layaas-oci/security/advisories/new
+    about: Keep credentials, OCIDs, production details and customer data out of public issues.

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "9d955671415fc19f069b9cc998928075c1f255ec",
+  "model_repo": "convaiinnovations/laya",
+  "model_revision": "55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851",
+  "checkpoint": "multilingual",
+  "torch_version": "2.8.0",
+  "limits": {"body_bytes": 32768, "state_chars": 8000, "questions": 8,
+    "choice_options": 16, "score_levels": 10, "total_options": 64,
+    "max_tokens": 512, "head_tokens": 128, "admitted_requests": 2}
+}

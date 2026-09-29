@@ -1,0 +1,113 @@
+title: "Deploy Layaas CPU API"
+stackDescription: "Deploy a private, authenticated CPU inference API into an existing OCI VCN."
+schemaVersion: 1.1.0
+version: "20260929"
+locale: "en"
+variableGroups:
+  - title: "OCI and Network"
+    variables:
+      - region
+      - tenancy_ocid
+      - compartment_ocid
+      - availability_domain
+      - subnet_ocid
+      - allowed_client_cidrs
+      - image_ocid
+  - title: "Secrets and Identity"
+    variables:
+      - secret_compartment_ocid
+      - api_secret_ocid
+  - title: "Compute"
+    variables:
+      - deployment_name
+      - shape
+      - ocpus
+      - memory_in_gbs
+      - boot_volume_size_gbs
+
+variables:
+  region:
+    type: oci:identity:region:name
+    title: Region
+    description: Region containing the subnet, image, and Vault secret.
+    required: true
+  tenancy_ocid:
+    type: string
+    title: Tenancy OCID
+    description: Used for an exact-instance dynamic group and its narrowly scoped Vault policy.
+    required: true
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    title: Compute compartment
+    description: Compartment for the API VM and its network security group.
+    required: true
+  availability_domain:
+    type: oci:identity:availabilitydomain:name
+    title: Availability domain
+    description: Placement for the API instance.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    required: true
+  subnet_ocid:
+    type: oci:core:subnet:id
+    title: Private subnet
+    description: Existing private subnet with NAT HTTPS egress and a Service Gateway route to OCI Vault.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    required: true
+  allowed_client_cidrs:
+    type: string
+    title: Allowed private client CIDRs
+    description: Comma-separated RFC1918 private IPv4 ranges, for example 10.20.0.0/16.
+    required: true
+  image_ocid:
+    type: oci:core:image:id
+    title: Ubuntu 24.04 amd64 image
+    description: Select a regional Ubuntu 24.04 amd64 image compatible with the selected Flex shape.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    required: true
+  secret_compartment_ocid:
+    type: oci:identity:compartment:id
+    title: Vault secret compartment
+    description: Compartment containing the pre-created API bearer secret.
+    required: true
+  api_secret_ocid:
+    type: string
+    title: API secret OCID
+    description: OCID of the pre-created Vault secret. Enter the OCID only; never enter the secret value.
+    required: true
+  deployment_name:
+    type: string
+    title: Unique deployment name
+    default: layaas
+    required: true
+  shape:
+    type: oci:core:instanceshape:name
+    title: Flex compute shape
+    default: VM.Standard.E5.Flex
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      imageId: ${image_ocid}
+    required: true
+  ocpus:
+    type: integer
+    title: OCPUs
+    default: 1
+    minimum: 1
+    maximum: 64
+    required: true
+  memory_in_gbs:
+    type: integer
+    title: Memory (GB)
+    default: 8
+    minimum: 8
+    maximum: 1024
+    required: true
+  boot_volume_size_gbs:
+    type: integer
+    title: Boot volume size (GB)
+    default: 50
+    minimum: 50
+    maximum: 32768
+    required: true

@@ -1,0 +1,9 @@
+{
+  "model": "multilingual",
+  "state": "Jag har blivit debiterad två gånger för samma köp. Återbetala den dubbla debiteringen.",
+  "questions": {
+    "team": {"type": "choice", "instructions": "Vilket team ska hantera ärendet?", "criteria": {"billing": "Betalningar och återbetalningar", "technical": "Programfel"}},
+    "urgency": {"type": "score", "instructions": "Hur brådskande är ärendet?", "criteria": ["låg", "medel", "hög"]},
+    "refund_requested": {"type": "noul", "instructions": "Ber kunden uttryckligen om en återbetalning?"}
+  }
+}
