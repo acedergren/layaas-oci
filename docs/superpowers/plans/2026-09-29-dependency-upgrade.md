@@ -8,8 +8,8 @@ Retain upstream 9d955671415fc19f069b9cc998928075c1f255ec and multilingual model 
 
 ## Deliverables and progress
 
-- [ ] 1. Clean pinned model retrieval, raw/final SHA-256 manifest and updated dependency lock/release identity; advisory disposition.
-- [ ] 2. Staged, verified, root-owned read-only model preparation; local Agent plus Router.attach loader; packaging/bootstrap/service updates and negative security tests.
+- [x] 1. Clean pinned model retrieval, raw/final SHA-256 manifest and updated dependency lock/release identity; advisory disposition.
+- [x] 2. Staged, verified, root-owned read-only model preparation; local Agent plus Router.attach loader; packaging/bootstrap/service updates and negative security tests.
 - [ ] 3. Ubuntu installation, root ownership/write-denial, offline startup/restart, API regression and real baseline/candidate acceptance in CI.
 - [ ] 4. Independent final review, immutable public patch release/runtime/stack/evidence SHA-256; private reviewed extraction/adoption/rollback package committed and pushed.
 
@@ -32,3 +32,6 @@ Private package pins public runtime commit/digest, verifies before safe extracti
 - Implementation: fresh immutable-revision retrieval produced five SHA-256 records. The source tokenizer is already normalized: source/final hashes coincide. Unknown variants remain rejected. Linux lock regenerated with uv 0.9.7 and preserved compatible constraints. 55 local tests pass; these are contract/fixture tests, not Linux model evidence.
 - Runtime implementation: protected version directory, copied-byte verification before normalization, complete final-tree/owner/mode/link/hash checks, local Agent attachment, CPU package checks. First security tests failed for missing implementation and passed after implementation. Linux acceptance and release are still pending.
 - Ruling: the final-set OSV query also flags OCI 2.160.0's forced cryptography 44.0.3 / pyOpenSSL 24.3.0. Preserving those conflicts with the explicit unresolved-advisory gate. Update OCI to 2.187.1 (supports cryptography <51 / pyOpenSSL >=26.2), cryptography 50.0.1 and pyOpenSSL 26.4.0; retain other compatible pins and repeat the full audit/CI. No advisory is accepted or silently excluded.
+
+- Independent final source review: no important public loader/artifact-binding findings. Private staging mode bug reproduced (0700), fixed to 0755 with service-user preflight; rollback command failures now fail closed, including stop. Private archive tests and six mocked rollback-failure tests pass; no systemd/VM execution claimed.
+- Linux contract/install/Terraform job passes. Hosted-runner /opt was group-writable; the disposable fixture now satisfies the unchanged strict ancestor policy. Full real-model acceptance pending. Restart runs all 24 cases once and compares each body with candidate; the baseline and candidate each retain ten repeats and both 50-request concurrency benchmarks. Restart does not duplicate performance measurements.

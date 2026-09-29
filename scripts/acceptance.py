@@ -48,6 +48,7 @@ def cases():
 
 
 def run(args):
+    started = time.perf_counter()
     assert platform.system() == 'Linux' and platform.machine() == 'x86_64'
     assert os.geteuid() != 0, 'inference must run as unprivileged user'
     # Namespace must have only loopback (down). An offline env flag alone is not proof.
@@ -59,11 +60,11 @@ def run(args):
     from server import create_app
     from release import RELEASE, verify_health
     import torch
-    started = time.perf_counter()
     app = create_app()
     result = {'schema_version': 1, 'commit': args.commit, 'role': args.role,
               'timestamp': datetime.now(timezone.utc).isoformat(), 'platform': platform.platform(),
               'proof': 'Ubuntu 24.04 amd64 local ASGI; isolated network namespace; synthetic inputs; no OCI',
+              'cpu_count': os.cpu_count(), 'cpu_model': next((line.split(':', 1)[1].strip() for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name')), 'unknown'),
               'network_interfaces': interfaces, 'startup_seconds': time.perf_counter() - started,
               'versions': {n: importlib.metadata.version(n) for n in ['torch', 'transformers', 'huggingface-hub', 'laya']},
               'model_revision': RELEASE['model_revision'], 'cases': {}, 'performance': {}}
@@ -88,12 +89,13 @@ def run(args):
         result['health'] = health
         for name, payload in fixtures.items():
             first, _ = infer(payload)
-            for _ in range(10):
+            repetitions = 0 if args.role == "restart" else 10
+            for _ in range(repetitions):
                 body, _ = infer(payload)
                 assert body == first, 'non-determinism: ' + name
-            result['cases'][name] = {'body': first, 'identical_repetitions': 10}
+            result['cases'][name] = {'body': first, 'identical_repetitions': repetitions}
         payload = json.loads((ROOT / 'samples/typed-en.json').read_text())
-        for concurrency in [1, 2]:
+        for concurrency in ([] if args.role == "restart" else [1, 2]):
             for _ in range(5): infer(payload)
             cpu_before = time.process_time()
             start = time.perf_counter()
@@ -126,7 +128,9 @@ def compare(baseline, candidate):
     old, new = (json.loads(p.read_text()) for p in (baseline, candidate))
     restart = json.loads(candidate.with_name('restart.json').read_text())
     assert restart['commit'] == new['commit']
-    assert restart['cases'] == new['cases'], 'restart changed inference'
+    assert restart['cases'].keys() == new['cases'].keys()
+    for name in new['cases']:
+        assert restart['cases'][name]['body'] == new['cases'][name]['body'], 'restart changed inference'
     assert restart['health'] == new['health'], 'restart changed identity'
     maximum = 0.0
     def walk(a, b, path=''):

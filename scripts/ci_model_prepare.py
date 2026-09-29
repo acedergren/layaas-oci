@@ -43,5 +43,9 @@ _fix_tokenizer_config(str(bundle))
 assert before == {n: sha256(bundle / n) for n in manifest['files']}
 result = {'model_manifest_sha256': digest, 'prepare_seconds': time.perf_counter() - start,
           'model_bytes': sum(p.stat().st_size for p in bundle.rglob('*') if p.is_file()),
+          'candidate_venv_bytes': int(subprocess.check_output(['du', '-sb', str(Path(sys.executable).parent.parent)], text=True).split()[0]),
+          'old_cache_bytes': int(subprocess.check_output(['du', '-sb', str(Path(sys.argv[2]))], text=True).split()[0]),
+          'new_cache_bytes': int(subprocess.check_output(['du', '-sb', os.environ['HF_HOME']], text=True).split()[0]),
+          'finalized_copy_count': 2,
           'files': len(manifest['files']), 'old_and_new_cache_verified': True, 'write_denial': True, 'normalization_noop': True}
 Path(sys.argv[1]).write_text(json.dumps(result, indent=2) + '\n')
