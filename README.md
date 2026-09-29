@@ -74,3 +74,12 @@ Layaas is an independent community deployment project and is not affiliated with
 or endorsed by Oracle or Convai Innovations. OCI, Oracle and Laya are their
 respective owners' marks. This project uses the Clear Signal identity and does
 not use Oracle branding.
+
+## Planned: registered decisions
+
+The [design](docs/superpowers/specs/2026-09-29-registered-decisions-design.md)
+and [implementation plan](docs/superpowers/plans/2026-09-29-registered-decisions.md)
+describe a future shadow-only decision API, per-application access and independent
+evaluation/calibration gates. These features are not included in `v0.1.0`.
+Operating a reliable inference service does not establish that its answers are
+useful or calibrated for a particular workflow.
