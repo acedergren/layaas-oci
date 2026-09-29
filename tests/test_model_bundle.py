@@ -127,3 +127,15 @@ def test_unexpected_owner_is_rejected(fixture):
     path = call(fixture)
     with pytest.raises(ValueError, match='owner'):
         verify_bundle(path, fixture[2], owner=os.getuid() + 1, ancestors=False)
+
+
+def test_oversized_cache_is_rejected_before_normalization(fixture):
+    fixture[0].joinpath('config.json').write_bytes(b'x' * 100000)
+    with pytest.raises(ValueError): call(fixture)
+    assert list(fixture[1].iterdir()) == []
+
+
+def test_known_normalized_cache_variant_is_reusable(fixture):
+    record = fixture[2]['files']['config.json']
+    record.update(source_sha256=digest(b'old'), source_size=3)
+    verify(call(fixture), fixture[2])

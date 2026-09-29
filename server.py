@@ -89,6 +89,8 @@ def create_app(router=None):
     os.environ["LAYA_DEVICE"] = "cpu"
     os.environ["LAYA_MAX_CONCURRENT"] = str(LIMITS["admitted_requests"])
     os.environ["LAYA_MAX_TOKEN_BUDGET"] = str(MAX_TOKENS)
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
     from laya import serve
     serve.MAX_BODY_BYTES = LIMITS["body_bytes"]
     serve.MAX_STATE_CHARS = LIMITS["state_chars"]

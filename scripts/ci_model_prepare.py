@@ -26,6 +26,12 @@ snapshot = snapshot_download(RELEASE['model_repo'], revision=RELEASE['model_revi
 source = Path(snapshot) / RELEASE['checkpoint']
 bundle = prepare(source, MODEL_ROOT, manifest, digest, _fix_tokenizer_config)
 verify_bundle(bundle, manifest)
+# Migrate a separately populated old Hub cache into an independent final copy.
+old_source = Path(sys.argv[2]) / ('models--' + RELEASE['model_repo'].replace('/', '--')) / 'snapshots' / RELEASE['model_revision'] / RELEASE['checkpoint']
+old_root = Path('/opt/laya/old-cache-proof')
+old_root.mkdir(mode=0o755)
+old_bundle = prepare(old_source, old_root, manifest, digest, _fix_tokenizer_config)
+verify_bundle(old_bundle, manifest)
 # Actual denied file write and denied replacement of the entire bundle as runtime UID.
 for target in [bundle / 'model.safetensors', bundle / 'tokenizer/tokenizer_config.json', MODEL_ROOT / 'unexpected']:
     cmd = ['runuser', '-u', os.environ['CI_RUNTIME_USER'], '--', sys.executable, '-c',
@@ -37,5 +43,5 @@ _fix_tokenizer_config(str(bundle))
 assert before == {n: sha256(bundle / n) for n in manifest['files']}
 result = {'model_manifest_sha256': digest, 'prepare_seconds': time.perf_counter() - start,
           'model_bytes': sum(p.stat().st_size for p in bundle.rglob('*') if p.is_file()),
-          'files': len(manifest['files']), 'write_denial': True, 'normalization_noop': True}
+          'files': len(manifest['files']), 'old_and_new_cache_verified': True, 'write_denial': True, 'normalization_noop': True}
 Path(sys.argv[1]).write_text(json.dumps(result, indent=2) + '\n')

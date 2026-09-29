@@ -100,7 +100,12 @@ def prepare(source, root, manifest, digest, normalize, *, owner=0):
                 raise ValueError('missing source file: ' + relative)
             dst.parent.mkdir(parents=True, exist_ok=True)
             with src.open('rb') as inp, dst.open('xb') as out:
-                shutil.copyfileobj(inp, out, 1024 * 1024)
+                remaining = max(record['source_size'], record['size'])
+                while chunk := inp.read(min(1024 * 1024, remaining + 1)):
+                    if len(chunk) > remaining:
+                        raise ValueError('source exceeds approved file size: ' + relative)
+                    out.write(chunk)
+                    remaining -= len(chunk)
             observed = (sha256(dst), dst.stat().st_size)
             if observed not in {(record['source_sha256'], record['source_size']),
                                 (record['sha256'], record['size'])}:

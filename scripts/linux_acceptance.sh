@@ -16,7 +16,7 @@ python -m venv "$WORK/candidate-venv"
 export HF_HUB_DISABLE_IMPLICIT_TOKEN=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1
 # Populate the old cache with the baseline client; candidate prepares its own fresh cache.
 HF_HOME="$WORK/baseline-cache" PYTHONPATH="$WORK/baseline" "$WORK/baseline-venv/bin/python" "$WORK/baseline/deploy/preload.py"
-sudo env CI_RUNTIME_USER="$USER" HF_HOME="$WORK/candidate-cache" HF_HUB_DISABLE_IMPLICIT_TOKEN=1 PYTHONDONTWRITEBYTECODE=1 "$WORK/candidate-venv/bin/python" scripts/ci_model_prepare.py "$OUT/preparation.json"
+sudo env CI_RUNTIME_USER="$USER" HF_HOME="$WORK/candidate-cache" HF_HUB_DISABLE_IMPLICIT_TOKEN=1 PYTHONDONTWRITEBYTECODE=1 "$WORK/candidate-venv/bin/python" scripts/ci_model_prepare.py "$OUT/preparation.json" "$WORK/baseline-cache/hub"
 # Drop root after creating network namespace. There is no route or network interface.
 sudo unshare --net -- runuser -u "$USER" -- env HF_HOME="$WORK/baseline-cache" HF_HUB_OFFLINE=1 HF_HUB_DISABLE_IMPLICIT_TOKEN=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 "$WORK/baseline-venv/bin/python" "$ROOT/scripts/acceptance.py" run --runtime "$WORK/baseline" --role baseline --commit "$BASELINE" --output "$OUT/baseline.json"
 sudo unshare --net -- runuser -u "$USER" -- env HF_HOME="$WORK/empty-offline-cache" HF_HUB_OFFLINE=1 HF_HUB_DISABLE_IMPLICIT_TOKEN=1 TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 "$WORK/candidate-venv/bin/python" "$ROOT/scripts/acceptance.py" run --runtime "$ROOT" --role candidate --commit "$GITHUB_SHA" --output "$OUT/candidate.json"
