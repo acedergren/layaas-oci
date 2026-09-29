@@ -1,4 +1,5 @@
 {
+  "lock_sha256": "c590e8ba474c2009847950163ee90ca91ef344dc63a8bcbe60de133de96907e5",
   "packages": [
     {
       "package": "aiohappyeyeballs",
@@ -328,5 +329,5 @@
   ],
   "scope": "Published OSV advisories matching exact PyPI versions; not proof of absence of vulnerabilities",
   "source": "https://api.osv.dev/v1/querybatch",
-  "timestamp": "2026-09-29T12:29:58.338588+00:00"
+  "timestamp": "2026-09-29T12:35:35.226462+00:00"
 }

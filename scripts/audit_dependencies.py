@@ -1,6 +1,7 @@
 """Query OSV for the exact runtime lock; store only public dependency metadata."""
 from datetime import datetime, timezone
 import json
+import hashlib
 from pathlib import Path
 import re
 import sys
@@ -15,7 +16,7 @@ queries.append({'package': {'name': 'laya', 'ecosystem': 'PyPI'}, 'version': '0.
 request = urllib.request.Request('https://api.osv.dev/v1/querybatch', data=json.dumps({'queries': queries}).encode(), headers={'Content-Type': 'application/json'})
 with urllib.request.urlopen(request, timeout=60) as response:
     results = json.load(response)['results']
-report = {'timestamp': datetime.now(timezone.utc).isoformat(), 'source': 'https://api.osv.dev/v1/querybatch',
+report = {'lock_sha256': hashlib.sha256((root / 'requirements-linux.lock').read_bytes()).hexdigest(), 'timestamp': datetime.now(timezone.utc).isoformat(), 'source': 'https://api.osv.dev/v1/querybatch',
           'scope': 'Published OSV advisories matching exact PyPI versions; not proof of absence of vulnerabilities',
           'packages': [{'package': q['package']['name'], 'version': q['version'], 'vulnerabilities': r.get('vulns', [])} for q, r in zip(queries, results)]}
 Path(sys.argv[1]).write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')

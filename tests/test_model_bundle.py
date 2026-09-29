@@ -106,3 +106,24 @@ def test_unexpected_source_link_is_rejected(fixture):
     f = fixture[0] / 'config.json'
     f.unlink(); f.symlink_to('/etc/passwd')
     with pytest.raises(ValueError): call(fixture)
+
+
+def test_manifest_digest_and_identity_fail_closed(monkeypatch, tmp_path):
+    import json
+    import model_bundle
+    from release import RELEASE
+    real, _ = load_manifest()
+    monkeypatch.setitem(RELEASE, 'model_manifest_sha256', '0' * 64)
+    with pytest.raises(ValueError, match='digest'): load_manifest()
+    real['model_revision'] = 'f' * 40
+    data = json.dumps(real).encode()
+    (tmp_path / 'model-manifest.json').write_bytes(data)
+    monkeypatch.setattr(model_bundle, '__file__', str(tmp_path / 'model_bundle.py'))
+    monkeypatch.setitem(RELEASE, 'model_manifest_sha256', digest(data))
+    with pytest.raises(ValueError, match='identity'): load_manifest()
+
+
+def test_unexpected_owner_is_rejected(fixture):
+    path = call(fixture)
+    with pytest.raises(ValueError, match='owner'):
+        verify_bundle(path, fixture[2], owner=os.getuid() + 1, ancestors=False)

@@ -13,6 +13,9 @@ from huggingface_hub import snapshot_download
 from release import RELEASE
 
 assert os.geteuid() == 0
+# Hosted runners make /opt group-writable for tool installers. Model ancestors
+# must meet the real runtime contract; harden this disposable CI fixture.
+Path("/opt").chmod(0o755)
 manifest, digest = load_manifest()
 MODEL_ROOT.parent.mkdir(parents=True, exist_ok=True, mode=0o755)
 MODEL_ROOT.parent.chmod(0o755)

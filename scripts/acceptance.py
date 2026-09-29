@@ -124,6 +124,10 @@ def run(args):
 
 def compare(baseline, candidate):
     old, new = (json.loads(p.read_text()) for p in (baseline, candidate))
+    restart = json.loads(candidate.with_name('restart.json').read_text())
+    assert restart['commit'] == new['commit']
+    assert restart['cases'] == new['cases'], 'restart changed inference'
+    assert restart['health'] == new['health'], 'restart changed identity'
     maximum = 0.0
     def walk(a, b, path=''):
         nonlocal maximum
