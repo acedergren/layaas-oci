@@ -1,13 +1,74 @@
-.venv/
+# Local Python environments, caches and generated build/test output.
+.venv*/
+venv/
 __pycache__/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
 *.py[cod]
+*.egg-info/
+.coverage
+.coverage.*
+/coverage.xml
+/htmlcov/
+/build/
+/dist/
+
+# Local credentials and environment values; sanitized examples may be tracked.
 .env
+.env.*
+!.env.example
+!.env.*.example
+.envrc
+/.oci/
+/.ssh/
+/.cloudflared/
+/secrets/
+/config/private/
+/config/secret-refs.json
+/config/application-credentials.json
+
+# Terraform local state, plans and operator inputs. Keep .terraform.lock.hcl.
 .terraform/
 .terraform.lock.hcl.backup
 *.tfstate
 *.tfstate.*
 *.tfplan
+*.tfplan.*
+tfplan*
 *.tfvars
-dist/
-evidence/
+*.tfvars.json
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Raw datasets, model caches and operator artifacts stay outside version control.
+# These root directories do not hide synthetic tests/fixtures or samples.
+/work/
+/private/
+/data/
+/datasets/
+/reports/
+/predictions/
+/feedback/
+/logs/
+/models/
+/checkpoints/
+/decision-bundles/
+/config/decision-bundle.json
+
+# Live deployment evidence belongs in the separate private repository.
+/evidence/
+
+# OS files, editor recovery files and backups (do not delete active swap files).
+.DS_Store
+*.swp
+*.swo
+*.swx
+*~
