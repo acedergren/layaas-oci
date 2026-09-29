@@ -14,7 +14,9 @@ from release import RELEASE
 
 assert os.geteuid() == 0
 manifest, digest = load_manifest()
-MODEL_ROOT.mkdir(parents=True, exist_ok=True)
+MODEL_ROOT.parent.mkdir(parents=True, exist_ok=True, mode=0o755)
+MODEL_ROOT.parent.chmod(0o755)
+MODEL_ROOT.mkdir(exist_ok=True, mode=0o755)
 start = time.perf_counter()
 snapshot = snapshot_download(RELEASE['model_repo'], revision=RELEASE['model_revision'],
                              allow_patterns=[RELEASE['checkpoint'] + '/' + name for name in manifest['files']], token=False)

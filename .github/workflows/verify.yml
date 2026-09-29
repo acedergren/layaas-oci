@@ -25,6 +25,8 @@ jobs:
           python -m pip install --disable-pip-version-check -r requirements-linux.lock
           python -m pip install --disable-pip-version-check -r requirements-test.txt
           python -m pip check
+      - name: Check exact dependency set for unresolved published advisories
+        run: python scripts/audit_dependencies.py /tmp/dependency-audit.json
       - name: Run contract, model integrity, and stack safety tests
         run: python -m pytest -q
       - name: Compile Python and check shell syntax
@@ -32,6 +34,7 @@ jobs:
           python -m compileall -q server.py release.py model_bundle.py deploy examples scripts tests
           bash -n deploy/bootstrap.sh
           bash -n scripts/linux_acceptance.sh
+          shellcheck deploy/bootstrap.sh scripts/linux_acceptance.sh
       - name: Check Terraform formatting and validity
         run: |
           terraform fmt -check -recursive
@@ -61,3 +64,30 @@ jobs:
           path: reports/acceptance/*.json
           if-no-files-found: error
           retention-days: 30
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [verify, model-acceptance]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: synthetic-acceptance-${{ github.sha }}
+          path: dist
+      - name: Bind reviewed artifacts and synthetic evidence to this commit
+        run: |
+          cp model-manifest.json dist/model-manifest.json
+          cp docs/verification/dependency-audit.json dist/dependency-audit.json
+          python scripts/build_release.py dist
+      - name: Publish verified patch release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$GITHUB_REF_NAME" = "v$(python -c 'from release import RELEASE; print(RELEASE["version"])')"
+          gh release create "$GITHUB_REF_NAME" dist/layaas-runtime.zip dist/layaas-oci-stack.zip dist/model-manifest.json dist/baseline.json dist/candidate.json dist/restart.json dist/preparation.json dist/comparison.json dist/dependency-audit.json dist/release-manifest.json dist/SHA256SUMS --verify-tag --title "Layaas OCI $GITHUB_REF_NAME" --notes-file docs/verification/RELEASE-NOTES.md

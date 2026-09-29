@@ -22,7 +22,13 @@ def fixture(tmp_path):
         'sha256': digest(data), 'size': len(data)}}}
     target = tmp_path / 'models'
     target.mkdir()
-    return source, target, manifest
+    yield source, target, manifest
+    # Restore fixture directory modes so pytest can remove them, without following links.
+    for current, dirs, files in os.walk(target):
+        Path(current).chmod(0o700)
+        for name in dirs:
+            child = Path(current) / name
+            if not child.is_symlink(): child.chmod(0o700)
 
 
 def call(fixture, normalize=lambda p: None):

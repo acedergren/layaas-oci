@@ -91,3 +91,36 @@ policy. Terraform does not destroy the pre-existing VCN/subnet, Vault, key or
 secret. Delete the secret separately only if it is dedicated to this deployment
 and retention requirements permit it. Remove any external VPN, gateway or DNS
 configuration separately.
+
+## Immutable model preparation (v0.1.1)
+
+`model-manifest.json` is reviewed release input, bound by SHA-256 in `release.json`.
+It records the exact five source and finalized files from the pinned checkpoint.
+The clean source tokenizer was already normalized; its source and final digests
+are identical. The installer accepts only these known bytes, invokes the pinned
+upstream normalizer and verifies all finalized bytes. An unknown cache variant
+fails closed; do not generate replacement hashes on the target host.
+
+Bootstrap runs model preparation separately from inference. It copies validated
+bytes into a staging directory and atomically publishes
+`/opt/laya/models/<model-revision>-<manifest-sha256>`, owned by root, with files
+0444 and directories 0555. Files are independent copies, without symlinks or
+hardlinks into the writable download cache. Existing matching bundles are reused;
+conflicts stop installation. Interrupted stages are never selected by the loader.
+The bootstrap lock serializes retries; rerun `/opt/laya/bootstrap.sh` after fixing
+dependency/download/IAM failures. No readiness marker is retained on failure.
+
+The API validates ownership, all ancestor permissions, exact file inventory and
+hashes before constructing a local `Agent` and attaching it to the router. Model
+identity is assigned after successful load. The process has no writable model
+cache and runs with `HF_HUB_OFFLINE=1`; temporary files use systemd's private /tmp.
+Local development that exercises real inference needs an equivalent root-owned
+model copy on Linux. Fake-router tests do not require root or weights.
+
+Allow room for download cache, staging, finalized copy, previous model and both
+Python environments. Check actual free space before upgrades rather than deleting
+a working cache. The release's preparation/startup/disk/RSS measurements are
+synthetic Linux-runner evidence; operators must measure their own VM before
+approving adoption. Do not run the new-stack bootstrap over an existing private
+installation: stage the released runtime separately, build its own venv, verify
+its bundle, then switch the whole runtime/model pair under an approved runbook.
