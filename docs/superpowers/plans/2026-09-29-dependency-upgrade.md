@@ -10,8 +10,8 @@ Retain upstream 9d955671415fc19f069b9cc998928075c1f255ec and multilingual model 
 
 - [x] 1. Clean pinned model retrieval, raw/final SHA-256 manifest and updated dependency lock/release identity; advisory disposition.
 - [x] 2. Staged, verified, root-owned read-only model preparation; local Agent plus Router.attach loader; packaging/bootstrap/service updates and negative security tests.
-- [ ] 3. Ubuntu installation, root ownership/write-denial, offline startup/restart, API regression and real baseline/candidate acceptance in CI.
-- [ ] 4. Independent final review, immutable public patch release/runtime/stack/evidence SHA-256; private reviewed extraction/adoption/rollback package committed and pushed.
+- [x] 3. Ubuntu installation, root ownership/write-denial, offline startup/restart, API regression and real baseline/candidate acceptance in CI.
+- [x] 4. Independent final review, immutable public patch release/runtime/stack/evidence SHA-256; private reviewed extraction/adoption/rollback package committed and pushed.
 
 ## Acceptance
 
@@ -35,3 +35,7 @@ Private package pins public runtime commit/digest, verifies before safe extracti
 
 - Independent final source review: no important public loader/artifact-binding findings. Private staging mode bug reproduced (0700), fixed to 0755 with service-user preflight; rollback command failures now fail closed, including stop. Private archive tests and six mocked rollback-failure tests pass; no systemd/VM execution claimed.
 - Linux contract/install/Terraform job passes. Hosted-runner /opt was group-writable; the disposable fixture now satisfies the unchanged strict ancestor policy. Full real-model acceptance pending. Restart runs all 24 cases once and compares each body with candidate; the baseline and candidate each retain ten repeats and both 50-request concurrency benchmarks. Restart does not duplicate performance measurements.
+
+- Complete: v0.1.1 published at exact commit 23e3f51fdf1c52fd5cf0618e8d154584e7619178; release CI 36571205189 passed all three jobs. All published asset digests and the exact tag commit were verified after download. Final evidence is summarized in [v0.1.1 verification](../../verification/v0.1.1.md), with raw immutable assets on the release.
+- The private adoption package is finalized and pushed separately. 79 private local tests, shellcheck, compilation and actual published-ZIP extraction pass. No production access or changes occurred. The previous runtime remains in production; current VM preflight and later rollout remain outside this completed goal.
+- This post-release completion record changes Markdown only. The immutable release remains the CI-verified tag; no runtime, manifest, lock, test, workflow or tolerance is changed by this documentation commit.
