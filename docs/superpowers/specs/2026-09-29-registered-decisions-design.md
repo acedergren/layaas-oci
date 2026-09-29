@@ -33,6 +33,14 @@ On 2026-09-29 the 42 local tests passed, and the release's
 [Ubuntu CI](https://github.com/acedergren/layaas-oci/actions/runs/36549582092)
 was successful. Neither check is a business-quality evaluation.
 
+On the same date, the repository's dependency alerts reported seven open
+Torch/Transformers advisories (three high, two medium, two low). This planning
+review did not establish reachability or exploitability. Before the next release,
+assess the exact locked versions and loaded execution paths, then record a
+remediation or reviewed exception for each applicable advisory. If remediation
+changes a pinned dependency, handle it as a separate prerequisite and repeat the
+affected runtime/quality baselines; do not silently change the evaluation target.
+
 `release.json` pins upstream `9d955671415fc19f069b9cc998928075c1f255ec`,
 the multilingual model at `55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851`, and
 CPU execution. Limits are 32,768 body bytes, 8,000 state characters, 8 questions,

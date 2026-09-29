@@ -339,6 +339,11 @@ configuration and Terraform state may reveal their decision rules.
 - [ ] Run all Python tests, compilation, shell syntax, Terraform fmt/init/validate
   and stack ZIP/cloud-init checks from `AGENTS.md`. Add an Ubuntu pinned-model
   integration job for Task 2, with no tenancy credentials and no production data.
+- [ ] Assess open dependency advisories against the exact lock and loaded paths;
+  record remediation or reviewed exceptions before release. At planning time,
+  seven Torch/Transformers alerts were open, three high. No applicability review
+  was performed here. If a fix requires changing the pinned baseline, do that in
+  a separate prerequisite change and rerun adapter parity and affected evaluation.
 - [ ] Confirm both route families under one cached model, exact model/device
   health, mixed overload and restart recovery in a clean Linux environment.
   Label Linux smoke evidence separately from any subsequent OCI measurements.
@@ -353,7 +358,7 @@ configuration and Terraform state may reveal their decision rules.
 | Gate | Required evidence | What it allows |
 |---|---|---|
 | G0: product/data contract | Named owner, actual taxonomy, labels/data approval, costs, review capacity, retention and slices | Representative dataset work and private application integration |
-| G1: engineering | Tasks 1–4 and 8 pass; pinned Linux adapter and shared admission proven | A deployable shadow runtime, with synthetic-only claims until G0/G2 |
+| G1: engineering | Tasks 1–4 and 8 pass; pinned Linux adapter, shared admission and dependency-advisory disposition recorded | A deployable shadow runtime, with synthetic-only claims until G0/G2 |
 | G2: independent quality | Tasks 5–6 frozen final report, baseline, calibration, risk/coverage and slice gates | Accept/reject the candidate for a controlled shadow trial |
 | G3: shadow rollout | G0/G1/G2 disposition recorded, owner-approved exact rollout and recovery checks; Task 7 outcomes | Learn from real workflow behavior while the current process retains decisions |
 | G4: automatic action | Sufficient shadow outcomes, pre-agreed quality/cost/capacity gates, exact owner approval and a separately reviewed act-mode implementation | Future constrained automation; explicitly outside this milestone |
