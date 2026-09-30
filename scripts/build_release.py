@@ -14,6 +14,11 @@ from release import RELEASE
 RUNTIME_FILES = ('server.py', 'release.py', 'release.json', 'model_bundle.py',
                  'model-manifest.json', 'requirements-linux.lock', 'deploy/preload.py',
                  'LICENSE', 'NOTICE')
+RELEASE_ARTIFACTS = (
+    'layaas-runtime.zip', 'layaas-oci-stack.zip', 'model-manifest.json',
+    'baseline.json', 'candidate.json', 'restart.json', 'preparation.json',
+    'comparison.json', 'dependency-audit.json',
+)
 
 
 def digest(path):
@@ -48,9 +53,11 @@ def main():
                 'packages': RELEASE['packages'], 'model_manifest_sha256': RELEASE['model_manifest_sha256'],
                 'runtime_sha256': digest(output / 'layaas-runtime.zip'),
                 'runtime_files': {n: digest(ROOT / n) for n in RUNTIME_FILES},
-                'artifacts': {p.name: digest(p) for p in sorted(output.iterdir()) if p.is_file() and p.suffix in ('.zip', '.json')}}
+                'artifacts': {name: digest(output / name) for name in RELEASE_ARTIFACTS}}
     (output / 'release-manifest.json').write_text(json.dumps(metadata, indent=2, sort_keys=True) + '\n')
-    (output / 'SHA256SUMS').write_text(''.join(f'{digest(p)}  {p.name}\n' for p in sorted(output.iterdir()) if p.name != 'SHA256SUMS' and p.is_file()))
+    (output / 'SHA256SUMS').write_text(''.join(
+        f'{digest(output / name)}  {name}\n'
+        for name in sorted((*RELEASE_ARTIFACTS, 'release-manifest.json'))))
     print('Built release for ' + commit)
 
 
